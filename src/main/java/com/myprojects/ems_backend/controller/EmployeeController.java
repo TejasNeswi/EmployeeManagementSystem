@@ -4,12 +4,13 @@ package com.myprojects.ems_backend.controller;
 import com.myprojects.ems_backend.dto.EmployeeDto;
 import com.myprojects.ems_backend.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -24,6 +25,27 @@ public class EmployeeController {
     {
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getEmployeeById (@PathVariable("id") Long employeeId)
+    {
+        try
+        {
+            EmployeeDto employeeById = employeeService.getEmployeeById(employeeId);
+            return new ResponseEntity<>(employeeById, HttpStatus.OK);
+        }
+        catch (RuntimeException e)
+        {
+            return new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees()
+    {
+        List<EmployeeDto> allEmployees = employeeService.getAllEmployees();
+        return new ResponseEntity<>(allEmployees, HttpStatus.OK);
     }
 
 }
