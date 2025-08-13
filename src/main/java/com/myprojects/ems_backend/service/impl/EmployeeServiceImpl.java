@@ -59,4 +59,18 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         throw new RuntimeException("Employee does not exist of id: "+id);
     }
+
+    @Override
+    public void deleteEmployee(Long id) {
+        Optional<Employee> byId = employeeRepository.findById(id);
+        if(byId.isPresent())
+        {
+            employeeRepository.deleteById(id);
+        }
+        else
+        {
+            throw new RuntimeException("Employee not found with id: "+id);
+        }
+
+    }
 }
